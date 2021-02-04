@@ -35,7 +35,7 @@ func (f *Faucet) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		sendResponse(w, &creditResponse{
 			Status: "failed",
-			Error:  "could not get total tokens funded for this account",
+			Error:  "could not get total tokens funded for this account: " + err.Error(),
 		})
 
 		return

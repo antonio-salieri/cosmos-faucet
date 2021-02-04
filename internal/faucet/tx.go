@@ -22,7 +22,8 @@ func (f *Faucet) GetTotalSent(recipient string) (uint64, error) {
 		fmt.Sprintf("message.sender=%s&transfer.recipient=%s", f.faucetAddress, recipient),
 		"--page", "1",
 		"--limit", "1000",
-		"--trust-node",
+		"--keyring-backend", "test",
+		// "--trust-node",
 	}
 
 	output, err := f.cliexec(args)
@@ -32,6 +33,7 @@ func (f *Faucet) GetTotalSent(recipient string) (uint64, error) {
 
 	var result types.SearchTxsResult
 	if err := f.cdc.UnmarshalJSON([]byte(output), &result); err != nil {
+		fmt.Println(">>>>>", output)
 		return 0, err
 	}
 

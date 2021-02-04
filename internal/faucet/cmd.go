@@ -10,6 +10,7 @@ import (
 func cmdexec(bin string, args []string, inputs ...string) (string, error) {
 	var stdout, stderr bytes.Buffer
 
+	fmt.Printf(">>> cmd = %v %#v\n", bin, args)
 	cmd := exec.Command(bin, args...)
 	cmd.Stdout = &stdout
 	cmd.Stderr = &stderr
