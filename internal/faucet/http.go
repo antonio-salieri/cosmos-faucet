@@ -50,7 +50,7 @@ func (f *Faucet) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if sent >= f.maxCredit {
 		log.WithFields(map[string]interface{}{
 			"address": req.Address,
-			"amount":  fmt.Sprintf("%d%s", f.creditAmount, f.denom),
+			"amount":  fmt.Sprintf("%d of denoms %v", f.creditAmount, f.denoms),
 			"total":   sent + f.creditAmount,
 		}).Warnf("tokens not sent: reached maximum credit")
 
@@ -69,7 +69,7 @@ func (f *Faucet) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 
 	log.WithFields(map[string]interface{}{
 		"address": req.Address,
-		"amount":  fmt.Sprintf("%d%s", f.creditAmount, f.denom),
+		"amount":  fmt.Sprintf("%d of denoms %v", f.creditAmount, f.denoms),
 		"total":   sent + f.creditAmount,
 	}).Infof("tokens sent")
 

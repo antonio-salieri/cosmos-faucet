@@ -19,7 +19,7 @@ var (
 	keyMnemonic     string
 	keyringPassword string
 	appCli          string
-	denom           string
+	denoms          string
 	creditAmount    uint64
 	maxCredit       uint64
 )
@@ -32,7 +32,7 @@ func init() {
 	flag.StringVar(&keyMnemonic, "mnemonic", environ.GetString("MNEMONIC", ""), "mnemonic for restoring key")
 	flag.StringVar(&keyringPassword, "keyring-password", environ.GetString("KEYRING_PASSWORD", ""), "the password for accessing keyring")
 	flag.StringVar(&appCli, "cli-name", environ.GetString("CLI_NAME", faucet.DefaultAppCli), "the name of the cli executable")
-	flag.StringVar(&denom, "denom", environ.GetString("DENOM", faucet.DefaultDenom), "the coin denomination")
+	flag.StringVar(&denoms, "denom", environ.GetString("DENOM", faucet.DefaultDenoms), "the coin denomination, comma separated for list of denominations")
 	flag.Uint64Var(&creditAmount, "credit-amount", environ.GetUint64("CREDIT_AMOUNT", faucet.DefaultCreditAmount), "the amount to credit in each request")
 	flag.Uint64Var(&maxCredit, "max-credit", environ.GetUint64("MAX_CREDIT", faucet.DefaultMaximumCredit), "the maximum credit per account")
 }
@@ -49,7 +49,7 @@ func main() {
 
 	f, err := faucet.NewFaucet(
 		faucet.KeyName(keyName),
-		faucet.Denom(denom),
+		faucet.Denoms(denoms),
 		faucet.WithMnemonic(keyMnemonic),
 		faucet.CliName(appCli),
 		faucet.KeyringPassword(keyringPassword),

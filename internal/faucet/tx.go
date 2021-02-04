@@ -9,11 +9,17 @@ import (
 )
 
 func (f *Faucet) Send(recipient string) error {
-	_, err := f.cliexec([]string{"tx", "send", f.keyName, recipient,
-		fmt.Sprintf("%d%s", f.creditAmount, f.denom), "--yes", "--chain-id", f.chainID},
-		f.keyringPassword, f.keyringPassword, f.keyringPassword)
+	for _, denom := range f.denoms {
+		if _, err := f.cliexec([]string{"tx", "bank", "send", f.keyName, recipient,
+			fmt.Sprintf("%d%s", f.creditAmount, denom), "--yes", "--chain-id", f.chainID,
+			"--keyring-backend", "test"},
+			f.keyringPassword, f.keyringPassword, f.keyringPassword,
+		); err != nil {
+			return err
+		}
+	}
 
-	return err
+	return nil
 }
 
 func (f *Faucet) GetTotalSent(recipient string) (uint64, error) {
@@ -46,7 +52,9 @@ func (f *Faucet) GetTotalSent(recipient string) (uint64, error) {
 		}
 
 		msg := stdTx.Msgs[0].(bank.MsgSend)
-		total += msg.Amount.AmountOf(f.denom).Uint64()
+		for _, denom := range f.denoms {
+			total += msg.Amount.AmountOf(denom).Uint64()
+		}
 	}
 
 	return total, nil

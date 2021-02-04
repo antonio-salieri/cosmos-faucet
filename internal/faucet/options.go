@@ -1,18 +1,22 @@
 package faucet
 
+import (
+	"strings"
+)
+
 const (
-	DefaultAppCli        = "gaiacli"
+	DefaultAppCli        = "liquidityd"
 	DefaultKeyName       = "faucet"
-	DefaultDenom         = "uatom"
-	DefaultCreditAmount  = 10000000
-	DefaultMaximumCredit = 100000000
+	DefaultDenoms        = "atom,stake,scrt,iris,band,kava,usdt,luna"
+	DefaultCreditAmount  = 300
+	DefaultMaximumCredit = 300
 )
 
 func defaultOptions() *Options {
 	return &Options{
 		AppCli:       DefaultAppCli,
 		KeyName:      DefaultKeyName,
-		Denom:        DefaultDenom,
+		Denoms:       strings.Split(DefaultDenoms, ","),
 		CreditAmount: DefaultCreditAmount,
 		MaxCredit:    DefaultMaximumCredit,
 	}
@@ -23,7 +27,7 @@ type Options struct {
 	KeyringPassword string
 	KeyName         string
 	KeyMnemonic     string
-	Denom           string
+	Denoms          []string
 	CreditAmount    uint64
 	MaxCredit       uint64
 }
@@ -54,9 +58,9 @@ func WithMnemonic(s string) Option {
 	}
 }
 
-func Denom(s string) Option {
+func Denoms(s string) Option {
 	return func(opts *Options) {
-		opts.Denom = s
+		opts.Denoms = strings.Split(s, ",")
 	}
 }
 

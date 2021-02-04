@@ -20,7 +20,7 @@ type Faucet struct {
 	keyName         string
 	faucetAddress   string
 	keyMnemonic     string
-	denom           string
+	denoms          []string
 	creditAmount    uint64
 	maxCredit       uint64
 	cdc             *codec.Codec
@@ -48,7 +48,7 @@ func NewFaucet(opts ...Option) (*Faucet, error) {
 		keyringPassword: options.KeyringPassword,
 		keyName:         options.KeyName,
 		keyMnemonic:     options.KeyMnemonic,
-		denom:           options.Denom,
+		denoms:          options.Denoms,
 		creditAmount:    options.CreditAmount,
 		maxCredit:       options.MaxCredit,
 		chainID:         chainID,
