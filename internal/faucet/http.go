@@ -18,16 +18,22 @@ type creditResponse struct {
 }
 
 func (f *Faucet) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	if r.Method != http.MethodPost {
-		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
-	}
-
 	var req creditRequest
-
 	w.Header().Set("Access-Control-Allow-Origin", "*")
 
-	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+	switch r.Method {
+	case http.MethodPost:
+		if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+			http.Error(w, "missing address in body", http.StatusBadRequest)
+			return
+		}
+	case http.MethodGet:
+		if req.Address = r.FormValue("address"); req.Address == "" {
+			http.Error(w, "missing address in query", http.StatusBadRequest)
+			return
+		}
+	default:
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
